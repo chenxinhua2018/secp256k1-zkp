@@ -584,6 +584,27 @@ int secp256k1_ecdsa_signature_serialize_compact(
     const secp256k1_ecdsa_signature* sig
 ) SECP256K1_ARG_NONNULL(1) SECP256K1_ARG_NONNULL(2) SECP256K1_ARG_NONNULL(3);
 
+/** Parse an ECDSA signature in compact (64 bytes) format.
+ *
+ *  Returns: 1 when the signature could be parsed, 0 otherwise.
+ *  Args: ctx:      a secp256k1 context object
+ *  Out:  sig:      a pointer to a signature object
+ *  In:   input64:  a pointer to the 64-byte array to parse
+ *
+ *  The signature must consist of a 32-byte big endian R value, followed by a
+ *  32-byte big endian S value. If R or S fall outside of [0..order-1], the
+ *  encoding is invalid. R and S with value 0 are allowed in the encoding.
+ *
+ *  After the call, sig will always be initialized. If parsing failed or R or
+ *  S are zero, the resulting sig value is guaranteed to fail validation for any
+ *  message and public key.
+ */
+int secp256k1_ecdsa_signature_parse_compact(
+    const secp256k1_context* ctx,
+    secp256k1_ecdsa_signature* sig,
+    const unsigned char *input64
+) SECP256K1_ARG_NONNULL(1) SECP256K1_ARG_NONNULL(2) SECP256K1_ARG_NONNULL(3);
+
 /** Compute the public key for a secret key.
  *
  *  Returns: 1: secret was valid, public key stores
